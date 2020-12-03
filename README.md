@@ -1,29 +1,21 @@
 # vue-el-admin
 
-## Project setup
+###安装插件
+
 ```
 yarn install
 ```
 
-### Compiles and hot-reloads for development
+### 开发环境编译
 ```
 yarn run serve
 ```
 
-### Compiles and minifies for production
+### 生产环境编译
 ```
 yarn run build
 ```
 
-### Run your tests
-```
-yarn run test
-```
+### vue-router使用文档
 
-### Lints and fixes files
-```
-yarn run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+[vue-router](./doc/router.md)
