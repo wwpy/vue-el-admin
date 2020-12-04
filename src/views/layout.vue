@@ -40,10 +40,10 @@
 					<!-- 面包屑导航 -->
 					<div class="border-bottom" style="padding: 20px;margin: -20px;">
 						<el-breadcrumb separator-class="el-icon-arrow-right">
-							<el-breadcrumb-item>首页</el-breadcrumb-item>
-							<el-breadcrumb-item>活动管理</el-breadcrumb-item>
-							<el-breadcrumb-item>活动列表</el-breadcrumb-item>
-							<el-breadcrumb-item>活动详情</el-breadcrumb-item>
+							<el-breadcrumb-item v-for="(item,index) in bran" :key="index"
+							:to="{ path: item.path }">
+								{{item.title}}
+							</el-breadcrumb-item>
 						</el-breadcrumb>
 					</div>
 				</el-main>
@@ -86,10 +86,9 @@
 		methods: {
 			// 获取面包屑导航
 			getRouterBran() {
-				console.log(this.$route.matched)
 				let b = this.$route.matched.filter(v => v.name)
 				let arr = []
-				b.forEach((v, k) => {
+				b.forEach((v) => {
 					// 过滤layout和index
 					if (v.name === 'index' || v.name === 'layout') return
 					arr.push({
@@ -106,12 +105,12 @@
 			// 头部导航
 			handleSelect(key, keyPath) {
 				this.navBar.active = key
-				console.log(keyPath)
+				console.log('----',keyPath)
 			},
 			// 侧边导航
 			slideSelect(key, keyPath) {
 				this.slideMenuActive = key
-				console.log(key, keyPath);
+				console.log('----',key, keyPath);
 			}
 		}
 	}
