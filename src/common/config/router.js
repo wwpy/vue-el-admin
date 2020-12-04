@@ -6,14 +6,17 @@ let routes = [
 		component: 'layout',
 		children: [
 			{
+				meta: { title: '后台首页' },
 				component: 'index/index'
 			},
 			{
+				meta: { title: '商品列表' },
 				component: 'shop/goods/list'
 			}
 		]
 	},
 	{
+		meta: { title: '登录' },
 		component: 'login/index'
 	},
 	{

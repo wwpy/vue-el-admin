@@ -2,18 +2,16 @@
 	<div>
 		<el-container style="position: absolute;left: 0;top: 0;bottom: 0;right: 0;overflow: hidden;">
 			<el-header class="d-flex align-items-center" style="background: #545c64;">
-				<a class="h5 text-light mb-0 mr-auto">UNI-ADMIN</a>
-				<el-menu :default-active="navBarIndex" 
+				<a class="h5 text-light mb-0 mr-auto">
+					{{$conf.logo}}
+				</a>
+				<el-menu :default-active="navBar.active" 
 				mode="horizontal" 
 				background-color="#545c64"
 				text-color="#fff"
 				active-text-color="#ffd04b"
 				@select="handleSelect">
-					<el-menu-item index="1">首页</el-menu-item>
-					<el-menu-item index="2">商品</el-menu-item>
-					<el-menu-item index="3">订单</el-menu-item>
-					<el-menu-item index="4">会员</el-menu-item>
-					<el-menu-item index="5">设置</el-menu-item>
+					<el-menu-item :index="item.index" v-for="(item, index) in navBar.list" :key="index">{{item.name}}</el-menu-item>
 					<el-submenu index="100">
 						<template slot="title">
 							<el-avatar size="small" 
@@ -27,25 +25,27 @@
 			</el-header>
 			<el-container style="height: 100%;">
 				<!-- 侧边栏布局 -->
-				<el-aside width="200px" style="padding-bottom: 55px;">
-					<el-menu default-active="2" @select="slideSelect">
-						<el-menu-item index="2">
-							<i class="el-icon-menu"></i>
-							<span slot="title">导航二</span>
-						</el-menu-item>
-						<el-menu-item index="3">
-							<i class="el-icon-document"></i>
-							<span slot="title">导航三</span>
-						</el-menu-item>
-						<el-menu-item index="4">
-							<i class="el-icon-setting"></i>
-							<span slot="title">导航四</span>
+				<el-aside width="200px">
+					<!-- 侧边栏菜单 -->
+					<el-menu default-active="0" @select="slideSelect" style="height: 100%;">
+						<el-menu-item :index="item.index" 
+						v-for="(item, index) in slideMenues" :key="index">
+							<i :class="item.icon"></i>
+							<span slot="title">{{item.name}}</span>
 						</el-menu-item>
 					</el-menu>
 				</el-aside>
 				<!-- 主布局 -->
 				<el-main>
-					<li v-for="i in 100" :key="i">{{i}}</li>
+					<!-- 面包屑导航 -->
+					<div class="border-bottom" style="padding: 20px;margin: -20px;">
+						<el-breadcrumb separator-class="el-icon-arrow-right">
+							<el-breadcrumb-item>首页</el-breadcrumb-item>
+							<el-breadcrumb-item>活动管理</el-breadcrumb-item>
+							<el-breadcrumb-item>活动列表</el-breadcrumb-item>
+							<el-breadcrumb-item>活动详情</el-breadcrumb-item>
+						</el-breadcrumb>
+					</div>
 				</el-main>
 			</el-container>
 		</el-container>
@@ -54,18 +54,63 @@
 </template>
 
 <script>
+	import common from '@/common/mixins/common.js';
+	
 	export default {
+		mixins: [common],
 		data() {
 			return {
-				navBarIndex: '1',
-				activeIndex2: '1'
+				navBar: [],
+				bran: []
+			}
+		},
+		created() {
+			// 初始化菜单
+			this.navBar = this.$conf.navBar
+			// 获取面包屑导航
+			this.getRouterBran()
+		},
+		computed: {
+			slideMenuActive: {
+				get() {
+					return this.navBar.list[this.navBar.active].subActive || '0'
+				},	
+				set(val) {
+					this.navBar.list[this.navBar.active].subActive = val
+				}
+			},
+			slideMenues() {
+				return this.navBar.list[this.navBar.active].subMenu || []
 			}
 		},
 		methods: {
-			handleSelect(key, keyPath) {
-				console.log(key, keyPath);
+			// 获取面包屑导航
+			getRouterBran() {
+				console.log(this.$route.matched)
+				let b = this.$route.matched.filter(v => v.name)
+				let arr = []
+				b.forEach((v, k) => {
+					// 过滤layout和index
+					if (v.name === 'index' || v.name === 'layout') return
+					arr.push({
+						name: v.name,
+						path: v.path,
+						title: v.meta.title
+					})
+				})
+				if (arr.length > 0) {
+					arr.unshift({ name:'index',path:'/index',title:'后台首页'})
+				}
+				this.bran = arr
 			},
+			// 头部导航
+			handleSelect(key, keyPath) {
+				this.navBar.active = key
+				console.log(keyPath)
+			},
+			// 侧边导航
 			slideSelect(key, keyPath) {
+				this.slideMenuActive = key
 				console.log(key, keyPath);
 			}
 		}

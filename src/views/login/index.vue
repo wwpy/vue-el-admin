@@ -6,7 +6,7 @@
 					<div class="card mt-5">
 						<div class="card-header bg-white">
 							<h3 class="text-center mb-0 text-secondary">
-								UNI-ADMIN
+								{{$conf.logo}}
 							</h3>
 						</div>
 						<div class="card-body">
